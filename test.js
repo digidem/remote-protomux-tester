@@ -198,6 +198,57 @@ test('Captures mapeo/rpc connection', async (t) => {
   t.deepEqual(responseWithoutRawData, expected, 'Expected response')
 })
 
+test('Require auth token header if AUTH_TOKEN env set', async (t) => {
+  const authToken = 'babababababa'
+  process.env.AUTH_TOKEN = authToken
+  t.teardown(() => {
+    delete process.env.AUTH_TOKEN
+  })
+
+  const response = await app.inject({
+    url: '/connect',
+    payload: { host: '127.0.0.1:5678' },
+    method: 'POST',
+  })
+  t.equal(response.statusCode, 403)
+})
+
+test('Invalid token cannot access', async (t) => {
+  const authToken = 'actual_auth_token'
+  process.env.AUTH_TOKEN = authToken
+  t.teardown(() => {
+    delete process.env.AUTH_TOKEN
+  })
+
+  const response = await app.inject({
+    url: '/connect',
+    payload: { host: '127.0.0.1:5678' },
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer invalid_token',
+    },
+  })
+  t.equal(response.statusCode, 403)
+})
+
+test('Valid token can access', async (t) => {
+  const authToken = '8a504d3d416bbb086563e282b99c8f48'
+  process.env.AUTH_TOKEN = authToken
+  t.teardown(() => {
+    delete process.env.AUTH_TOKEN
+  })
+
+  const response = await app.inject({
+    url: '/connect',
+    payload: { host: '127.0.0.1:5678' },
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer ' + authToken,
+    },
+  })
+  t.equal(response.statusCode, 200)
+})
+
 async function setupServer(t) {
   const server = net.createServer()
   server.listen(0, '127.0.0.1')

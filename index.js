@@ -9,9 +9,27 @@ const untypedFastify = Fastify({ logger: true })
 /** @type {ReturnType<typeof untypedFastify.withTypeProvider<import('@fastify/type-provider-typebox').TypeBoxTypeProvider>>} */
 const fastify = untypedFastify
 
+fastify.get('/healthcheck', async function () {})
+
 fastify.post(
   '/connect',
   {
+    onRequest: async (req, reply) => {
+      const authToken = process.env.AUTH_TOKEN
+
+      if (!authToken) return
+
+      const token = req.headers.authorization?.replace(/^Bearer /, '')
+      if (!token) {
+        reply.statusCode = 403
+        throw new Error('No token in Authorization header')
+      }
+
+      if (token !== authToken) {
+        reply.statusCode = 403
+        throw new Error('Invalid project token')
+      }
+    },
     schema: {
       body: Type.Object({
         host: Type.String(),
