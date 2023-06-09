@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for remote-protomux-tester on 2023-06-09T12:12:58+01:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "remote-protomux-tester"
+primary_region = "iad"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+[checks]
+  [checks.alive]
+    type = "tcp"
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "5s"
+  [checks.healthcheck]
+    grace_period = "30s"
+    interval = "15s"
+    method = "get"
+    path = "/healthcheck"
+    port = 3000
+    timeout = "10s"
+    type = "http"
