@@ -18,6 +18,26 @@ test('Connect with invalid host name -> error', async (t) => {
   t.equal(response.statusCode, 500)
 })
 
+test('Connect host not listening', async (t) => {
+  const notListeningHost = '127.0.0.1:5678'
+
+  const expected = {
+    socketConnected: false,
+    socketError: 'connect ECONNREFUSED ' + notListeningHost,
+    noiseConnected: false,
+    discoveryIds: [],
+    rawSocketData: '',
+    mapeoRpcConnected: false,
+  }
+
+  const response = await app.inject({
+    url: '/connect',
+    payload: { host: notListeningHost },
+    method: 'POST',
+  })
+  t.deepEqual(response.json(), expected)
+})
+
 test('Timeout if no data sent', async (t) => {
   const server = await setupServer(t)
 
