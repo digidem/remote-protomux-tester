@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "private": true,
   "scripts": {
     "test": "c8 --100 tape test.js",
     "start": "node server.js",
