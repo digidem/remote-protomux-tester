@@ -40,6 +40,18 @@ PORT=4000 npm start
 
 ## API
 
+### Authorization
+
+If you set the environment variable `AUTH_TOKEN` then the server will require that token to be sent in the `Authorization` header of the `/connect` request. In the following example, replace YOUR-TOKEN with a reference to your token:
+
+```
+curl --request POST \
+--url "http://127.0.0.1:3000/connect \
+--header "Authorization: Bearer YOUR-TOKEN" \
+--header "Content-Type: application/json"
+--data "{\"host\":\"127.0.0.1:1234\"}"
+```
+
 ### `POST /connect`
 
 **Request Body**
