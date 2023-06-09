@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "c8 --100 tape test.js",
+    "start": "node server.js",
     "prepare": "husky install"
   },
   "keywords": [],

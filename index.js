@@ -5,7 +5,7 @@ import Protomux from 'protomux'
 
 import net from 'node:net'
 
-const untypedFastify = Fastify({ logger: false })
+const untypedFastify = Fastify({ logger: true })
 /** @type {ReturnType<typeof untypedFastify.withTypeProvider<import('@fastify/type-provider-typebox').TypeBoxTypeProvider>>} */
 const fastify = untypedFastify
 
